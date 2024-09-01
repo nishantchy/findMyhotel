@@ -16,12 +16,13 @@ module.exports = {
         subtitle: "32px",
         header: "42px",
         "p-head": "18px",
-        paragraph: "16px",
+        paragraph: "14px",
         small: "12px",
         "diff-para": "14px",
+        navlink: "16px",
       },
       fontFamily: {
-        title: ["figmahead", "sans-serif"],
+        figmaHand: ["FigmaHand", "sans-serif"],
         normal: ["Roboto", "sans-serif"],
       },
       backgroundImage: {

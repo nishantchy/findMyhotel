@@ -42,6 +42,7 @@ router.post("/hotels", upload.array("images", 10), async (req, res) => {
       email,
       description,
       phoneNumber,
+      roomTypes,
     } = req.body;
     const images = req.files ? req.files.map((file) => file.path) : [];
 
@@ -59,7 +60,7 @@ router.post("/hotels", upload.array("images", 10), async (req, res) => {
       email,
       description,
       phoneNumber,
-      roomTypes: [],
+      roomTypes: Array.isArray(roomTypes) ? roomTypes : [roomTypes],
     });
 
     await hotel.save();
@@ -80,7 +81,7 @@ router.post("/hotels", upload.array("images", 10), async (req, res) => {
 // Get all hotels
 router.get("/hotels", async (req, res) => {
   try {
-    const hotels = await Hotel.find().populate("roomTypes");
+    const hotels = await Hotel.find();
     res.json(hotels);
   } catch (error) {
     res.status(500).send(error);
@@ -90,7 +91,7 @@ router.get("/hotels", async (req, res) => {
 // Get a specific hotel
 router.get("/hotels/:id", async (req, res) => {
   try {
-    const hotel = await Hotel.findById(req.params.id).populate("roomTypes");
+    const hotel = await Hotel.findById(req.params.id);
     if (!hotel) {
       return res.status(404).send("Hotel not found");
     }
@@ -124,6 +125,12 @@ router.patch("/hotels/:id", upload.array("images", 10), async (req, res) => {
         latitude: updates.location.latitude || hotel.location.latitude,
         longitude: updates.location.longitude || hotel.location.longitude,
       };
+    }
+
+    if (updates.roomTypes) {
+      updates.roomTypes = Array.isArray(updates.roomTypes)
+        ? updates.roomTypes
+        : [updates.roomTypes];
     }
 
     Object.assign(hotel, updates);
